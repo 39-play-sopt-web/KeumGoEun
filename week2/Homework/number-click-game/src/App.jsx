@@ -9,9 +9,17 @@ function App() {
     elapsedTime,
     startTimer,
     stopTimer,
+    resetTimer,
   } = useTimer();
 
   const [currentTab, setCurrentTab] = useState("game");
+  const [level, setLevel] = useState(1);
+
+  //레벨 변경 
+  function handleLevelChange(newLevel) {
+  setLevel(Number(newLevel));
+  resetTimer();
+}
 
   return (
     <>
@@ -19,13 +27,18 @@ function App() {
       elapsedTime={elapsedTime}
       currentTab={currentTab}
       onTabChange={setCurrentTab}
+      level={level}
+      onLevelChange={handleLevelChange}
     />
-    
+
     <main>
       {currentTab === "game" ? (
       <GameBoard
+      key={level}
+      level={level}
       onGameStart={startTimer}
-      onGameEnd={stopTimer} />) :
+      onGameEnd={stopTimer}
+      onGameReset={resetTimer} />) :
       ( 
         <RankingBoard />
       )}

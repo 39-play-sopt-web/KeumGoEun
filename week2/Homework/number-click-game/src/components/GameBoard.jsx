@@ -18,7 +18,7 @@ import { saveGameRecord } from "../utils/storage";
 
 
 //게임
-function GameBoard( {onGameStart, onGameEnd} ) {
+function GameBoard( {onGameStart, onGameEnd, onGameReset } ) {
     const [numbers, setNumbers] = useState(() => shuffleArray([1,2,3,4,5,6,7,8,9]));
 
     //클릭 후 교체될 숫자 
@@ -26,6 +26,7 @@ function GameBoard( {onGameStart, onGameEnd} ) {
     
     //다음에 클릭할 숫자
     const [nextNumber,setNextNumber] = useState(1)
+
 
 
     //클릭한 숫자가 맞는지 체크
@@ -65,7 +66,10 @@ function GameBoard( {onGameStart, onGameEnd} ) {
                 const finalTime = onGameEnd();
                 
                 saveGameRecord(1,finalTime);
+
                 alert(`끝났지롱^^ 걸린 시간: ${finalTime.toFixed(2)}초`);
+
+                resetGame();
             }
 
         }
@@ -95,4 +99,16 @@ function GameBoard( {onGameStart, onGameEnd} ) {
         </div>
 
     );
+
+    function resetGame() {
+        //랜덤 섞기 다시
+        setNumbers(shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+
+        setRemainingNumbers(shuffleArray([10, 11, 12, 13, 14, 15, 16, 17, 18]));
+
+        setNextNumber(1);
+
+        //타이머 초기화
+        onGameReset();
+    }
 } export default GameBoard;
