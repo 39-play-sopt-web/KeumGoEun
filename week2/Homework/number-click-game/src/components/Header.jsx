@@ -1,12 +1,12 @@
 //헤더
-function Header({elapsedTime}) {
+function Header({ elapsedTime, currentTab, onTabChange }) {
     return (
         <header>
             <h1>숫자 클릭 게임</h1>
 
             <nav>
-                <button type="button">게임</button>
-                <button type="button">랭킹</button>
+                <button type="button" onClick={() => onTabChange("game")}>게임</button>
+                <button type="button" onClick={() => onTabChange("ranking")}>랭킹</button>
             </nav>
 
             <select>
