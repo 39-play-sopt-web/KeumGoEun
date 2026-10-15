@@ -17,7 +17,7 @@ import NumberCard from "./NumberCard";
 
 
 //게임
-function GameBoard() {
+function GameBoard( {onGameStart, onGameEnd} ) {
     const [numbers, setNumbers] = useState(() => shuffleArray([1,2,3,4,5,6,7,8,9]));
 
     //클릭 후 교체될 숫자 
@@ -31,6 +31,10 @@ function GameBoard() {
     function handleNumberClick(clicknumber) {
             if (clicknumber != nextNumber) {
                     return;
+                }
+
+                if (clicknumber === 1 ) {
+                    onGameStart();
                 }
 
                 //다음에 표시할 숫자 가져오기 
@@ -56,12 +60,17 @@ function GameBoard() {
 
             setNextNumber(nextNumber+1);
 
+            if (clicknumber === 18 ) {
+                const finalTime = onGameEnd();
+                console.log(`게임완료 ${finalTime.toFixed(2)}초`);
+            }
+
         }
 
 
     return(
         <div>
-            <p>다음 숫자: {nextNumber} ({nextNumber-1}/18)</p>
+            <p>{nextNumber>18 ? "TheEnd,," : `다음 숫자: ${nextNumber} (${nextNumber-1}/18)`} </p>
 
         <div className="grid grid-cols-3 gap-3 w-100 mx-auto">
 

@@ -1,5 +1,5 @@
 //헤더
-function Header() {
+function Header({elapsedTime}) {
     return (
         <header>
             <h1>숫자 클릭 게임</h1>
@@ -15,7 +15,7 @@ function Header() {
                 <option>Level 1(5x5)</option>
             </select>
 
-            <span>0.00초</span>
+            <span>{elapsedTime.toFixed(2)}초</span>
 
         </header>
     )

@@ -1,13 +1,20 @@
 import Header from "./components/Header"
-import "./App.css"
+import useTimer from "./hooks/useTimer"
 import GameBoard from "./components/GameBoard";
 
 function App() {
+  const {
+    elapsedTime,
+    startTimer,
+    stopTimer,
+  } = useTimer();
   return (
     <>
-    <Header />
+    <Header elapsedTime={elapsedTime}/>
     <main>
-      <GameBoard />
+      <GameBoard
+      onGameStart={startTimer}
+      onGameEnd={stopTimer} />
     </main>
 
     </>
