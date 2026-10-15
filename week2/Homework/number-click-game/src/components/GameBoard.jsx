@@ -1,5 +1,6 @@
 import { useState } from "react";
 import NumberCard from "./NumberCard";
+import { saveGameRecord } from "../utils/storage";
 
  //배열을 랜덤하게 섞는 함수
     function shuffleArray(array) {
@@ -62,7 +63,9 @@ function GameBoard( {onGameStart, onGameEnd} ) {
 
             if (clicknumber === 18 ) {
                 const finalTime = onGameEnd();
-                console.log(`게임완료 ${finalTime.toFixed(2)}초`);
+                
+                saveGameRecord(1,finalTime);
+                alert(`끝났지롱^^ 걸린 시간: ${finalTime.toFixed(2)}초`);
             }
 
         }
