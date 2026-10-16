@@ -76,15 +76,24 @@ function GameBoard( {onGameStart, onGameEnd, onGameReset } ) {
 
 
     return(
-        <div>
-            <p>{nextNumber>18 ? "TheEnd,," : `다음 숫자: ${nextNumber} (${nextNumber-1}/18)`} </p>
+        <div className="flex flex-col items-center gap-6 pt-8">
+            {nextNumber > 18 ? (
+            <p>"TheEnd,,"</p> ) : (
+            <p className="flex items-center gap-2">
+            <span className="text-gray-500">다음 숫자</span>
+            <span className="text-3xl font-bold">{nextNumber}</span>
+            <span className="text-gray-500">
+      ({nextNumber - 1} / 18)
+    </span>
+  </p>
+)}
 
         <div className="grid grid-cols-3 gap-3 w-100 mx-auto">
 
         {/*map: 배열의 요소를 하나씩 꺼냄*/}
         {numbers.map((number, index) => (
             number === null ?(
-                <div key={index} className="aspect-square" />
+                <div key={index} className="aspect-square border-1 border-dashed rounded-md border-teal-300" />
             ) : (
 
             // 클릭 시 실행할 함수를 props로 전달

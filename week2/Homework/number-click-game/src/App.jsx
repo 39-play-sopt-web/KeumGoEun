@@ -23,15 +23,17 @@ function App() {
 
   return (
     <>
+    <div className="min-h-screen flex flex-col">
     <Header 
       elapsedTime={elapsedTime}
       currentTab={currentTab}
       onTabChange={setCurrentTab}
       level={level}
       onLevelChange={handleLevelChange}
+
     />
 
-    <main>
+    <main className="flex-1 bg-blue-100">
       {currentTab === "game" ? (
       <GameBoard
       key={level}
@@ -44,6 +46,7 @@ function App() {
       )}
 
     </main>
+    </div>
 
     </>
   )
