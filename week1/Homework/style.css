@@ -1,3 +1,11 @@
+:root {
+    --color-surface: #F9F8F7;
+    --color-surface-hover: #EEECEB;
+    --color-border: #F0EFED;
+    --color-text: #2C2C2B;
+    --color-text-muted: #5F5E59;
+}
+
 header{
     display: flex;
     justify-content: space-between;
@@ -63,7 +71,7 @@ nav ul{
 }
 
 nav ul li{
-    background-color:#F9F8F7;
+    background-color:var(--color-surface);
     display:flex;
     justify-content: center;
     align-items: center;
@@ -73,7 +81,7 @@ nav ul li{
 }
 
 nav ul li:hover{
-    background-color:#EEECEB;
+    background-color:var(--color-surface-hover);
 }
 
 nav li:first-child{
@@ -86,7 +94,7 @@ nav li:last-child{
 
 nav ul li a{
     text-decoration: none;
-    color: #5F5E59;
+    color: var(--color-text-muted);
 }
 
 .layout{
@@ -101,7 +109,7 @@ main{
 }
 
 h2{
-    color: #2C2C2B;
+    color: var(--color-text-muted);
     font-size: 20px;
 }
 
@@ -196,12 +204,12 @@ h2{
 }
 
 .interests-card{
-    background-color: #F9F8F7;
+    background-color: var(--color-surface);
     border-radius: 10px;
     overflow: hidden;
     text-align: center;
     padding:0;
-    border: 1px solid #F0EFED;
+    border: 1px solid var(--color-border);
     padding-bottom: 20px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
@@ -232,7 +240,7 @@ h2{
 }
 
 .card-button button:first-child:hover{
-    background-color:#EEECEB;
+    background-color: var(--color-surface-hover);
 }
 
 
@@ -269,10 +277,10 @@ h2{
 }
 
 .towebtory-im{
-    background-color: #F9F8F7;
+    background-color: var(--color-surface);
     padding:20px;
     border-radius: 16px;
-    border: 1px solid #F0EFED;
+    border: 1px solid var(--color-border);
     margin-bottom: 10px;
 }
 
