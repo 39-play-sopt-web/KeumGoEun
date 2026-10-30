@@ -78,6 +78,11 @@ const Card = styled.div`
         font-size:14px;    
     }
     
+    .poster-placeholder {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        background-color: #333333;
+    }
 
 
 `;
@@ -94,7 +99,7 @@ function MovieCard({ movie }:MovieCardProps) {
                     {imageUrl ? (
                     <img src={imageUrl} alt={`${movie.title} 포스터야미`} />
                 ) : (
-                    <div className='no-poster'>포스터 없음</div>
+                    <div className="poster-placeholder" />
                 )}
                     <span className='score'>★{movie.vote_average.toFixed(1)}</span>
                 </div>

@@ -1,25 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getMovies } from '../api/movie';
 import type { Movie } from '../types/movie';
 import MovieCard from '../components/MovieCard';
 import styled from 'styled-components';
 
 const MovieGrid = styled.div`
-  box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 24px;
   width: 100%;
+`;
+
+const PageContainer = styled.div`
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 32px 24px;
+  box-sizing: border-box;
+
+  h1 {
+    font-size: 32px;
+    color: #FFFFFF;
+    margin: 0 0 24px;
+  }
 `;
 
 const RatingFilters = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 0 24px;
+  margin-bottom: 24px;
 
   button {
     border: none;
@@ -37,6 +47,8 @@ const RatingFilters = styled.div`
   }
 `;
 
+
+
 const ratingFilters = [
   { label: '전체', min: 0, max: 10 },
   { label: '9점 이상', min: 9, max: 10 },
@@ -51,6 +63,9 @@ function MovieList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedFilter, setSelectedFilter] = useState(0);
+  const [page, setPage] = useState(1);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     let ignore = false;
@@ -61,10 +76,22 @@ function MovieList() {
 
       try {
         const filter = ratingFilters[selectedFilter];
-        const data = await getMovies(filter.min, filter.max);
+        const data = await getMovies(filter.min, filter.max,page);
 
         if (!ignore) {
-          setMovies(data.results);
+            setTotalPages(data.total_pages);
+
+            if (page === 1){
+                setMovies(data.results);
+            } else {
+                setMovies((prev) => {
+                    const newMovies = data.results.filter(
+                    (movie) => !prev.some((existing) => existing.id === movie.id)
+                );
+
+                 return [...prev, ...newMovies];
+                });
+            }
         }
       } catch (error) {
         console.error(error);
@@ -84,37 +111,76 @@ function MovieList() {
     return () => {
       ignore = true;
     };
-  }, [selectedFilter]);
+  }, [selectedFilter,page]);
 
-  return (
-    <div>
-      <h1>영화 둘러보기</h1>
+  useEffect(() => {
+  const target = loaderRef.current;
 
-      <RatingFilters>
-        {ratingFilters.map((filter, index) => (
-          <button
-            key={filter.label}
-            className={selectedFilter === index ? 'active' : ''}
-            onClick={() => setSelectedFilter(index)}
-          >
-            {filter.label}
-          </button>
-        ))}
-      </RatingFilters>
+  if (!target || loading || error || page >= totalPages) {
+    return;
+  }
 
-      {loading ? (
-        <p>영화 불러오는 중...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        setPage((prev) => prev + 1);
+      }
+    },
+    {
+      rootMargin: '200px',
+    }
+  );
+
+  observer.observe(target);
+
+  return () => {
+    observer.disconnect();
+  };
+}, [loading, error, page, totalPages]);
+
+return (
+  <PageContainer>
+    <h1>영화 둘러보기</h1>
+
+    <RatingFilters>
+      {ratingFilters.map((filter, index) => (
+        <button
+          key={filter.label}
+          className={selectedFilter === index ? 'active' : ''}
+          onClick={() => {
+            setMovies([]);
+            setSelectedFilter(index);
+            setPage(1);
+          }}
+        >
+          {filter.label}
+        </button>
+      ))}
+    </RatingFilters>
+
+    {error ? (
+      <p>{error}</p>
+    ) : (
+      <>
         <MovieGrid>
           {movies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </MovieGrid>
-      )}
-    </div>
-  );
+
+        {loading && <p>영화를 불러오는 중...</p>}
+
+        {!loading && page < totalPages && (
+          <div ref={loaderRef} />
+        )}
+      </>
+    )}
+  </PageContainer>
+);
+
+ 
+
 }
 
 export default MovieList;
