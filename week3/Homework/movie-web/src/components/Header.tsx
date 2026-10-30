@@ -16,7 +16,7 @@ const HeaderContainer = styled.header`
 `;
 
 const Logo = styled(Link)`
-  color: #FFFFFF;
+  color: ${({ theme }) => theme.colors.text};
   font-size: 20px;
   font-weight: 800;
   text-decoration: none;

@@ -3,12 +3,16 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { GlobalStyle } from './styles/GlobalStyle';
 import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import { theme } from './styles/theme';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <GlobalStyle />
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <BrowserRouter>
+        <App />
+        </BrowserRouter>
+    </ThemeProvider>
   </StrictMode>,
 );

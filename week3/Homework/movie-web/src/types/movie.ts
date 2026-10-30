@@ -18,6 +18,7 @@ export interface MovieDetail extends Movie {
   backdrop_path: string | null;
   runtime: number | null;
   status: string;
+  vote_count: number; 
   budget: number;
   revenue: number;
 

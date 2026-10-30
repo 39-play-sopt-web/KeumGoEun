@@ -8,7 +8,7 @@ const DetailContainer = styled.div`
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 24px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const MovieInfo = styled.div`
@@ -34,8 +34,8 @@ const DetailScore = styled.span`
   width: fit-content;
   padding: 6px 10px;
 
-  background-color: #0055FF;
-  color: #FFFFFF;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text};
 
   border-radius: 8px;
   font-size: 14px;
@@ -102,9 +102,23 @@ const InfoCard = styled.div`
 
   .value {
     font-size: 14px;
-    color: #ffffff;
+    color: ${({ theme }) => theme.colors.text};
     font-weight: 500;
   }
+`;
+
+const GenreList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const GenreTag = styled.span`
+  padding: 6px 10px;
+  border-radius: 999px;
+  background-color: ${({ theme }) => theme.colors.card};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 12px;
 `;
 
 
@@ -195,11 +209,26 @@ function MovieDetail() {
       <MovieInfo>
         <h1>{movie.title}</h1>
 
-        <DetailScore>★{movie.vote_average.toFixed(1)}</DetailScore>
+        <DetailScore>
+            ★ {movie.vote_average.toFixed(1)}
+        </DetailScore>
 
-        <p>개봉일: {movie.release_date}</p>
+        <p>
+            개봉일: {movie.release_date} ·
+            상영 시간: {movie.runtime ?? '정보 없음'}분 ·
+            평가 {movie.vote_count.toLocaleString()}명
+        </p>
 
-      </MovieInfo>
+        <p>상태: {movie.status}</p>
+
+        <GenreList>
+            {movie.genres.map((genre) => (
+            <GenreTag key={genre.id}>
+                {genre.name}
+            </GenreTag>
+            ))}
+        </GenreList>
+</MovieInfo>
     </MovieHero>
 
       <h2>줄거리</h2>

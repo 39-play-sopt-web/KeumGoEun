@@ -20,7 +20,7 @@ const PageContainer = styled.div`
 
   h1 {
     font-size: 32px;
-    color: #FFFFFF;
+    color: ${({ theme }) => theme.colors.text};
     margin: 0 0 24px;
   }
 `;
@@ -41,8 +41,8 @@ const RatingFilters = styled.div`
   }
 
   button.active {
-    background-color: #0055FF;
-    color: #FFFFFF;
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.text};
     font-weight: bold;
   }
 `;
@@ -149,6 +149,8 @@ return (
           key={filter.label}
           className={selectedFilter === index ? 'active' : ''}
           onClick={() => {
+            if (index === selectedFilter) return;
+
             setMovies([]);
             setSelectedFilter(index);
             setPage(1);

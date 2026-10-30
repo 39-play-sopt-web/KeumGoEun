@@ -14,7 +14,7 @@ const Card = styled.div`
     min-width:0;
     border-radius: 12px;
     border: solid 1px #3C3C3C;
-    background-color: #262626;
+    background-color: ${({ theme }) => theme.colors.card};
 
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
@@ -54,7 +54,7 @@ const Card = styled.div`
         font-size:14px;
         line-height: 1;
 
-        background-color:#0055FF;
+        background-color: ${({ theme }) => theme.colors.primary};
         border-radius:8px;
         padding: 6px 8px;
     }
@@ -65,7 +65,7 @@ const Card = styled.div`
 
     h2{
         font-size:18px;
-        color: #FFFFFF;
+        color: ${({ theme }) => theme.colors.text};
         margin: 16px 0 6px;
     }
 
