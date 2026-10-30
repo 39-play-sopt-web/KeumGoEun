@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { MovieResponse } from '../types/movie';
+import type { Movie, MovieResponse } from '../types/movie';
 
 export const getMovies = async (
     minRating: number = 0,
@@ -14,6 +14,12 @@ export const getMovies = async (
             },
         },
     );
+
+    return response.data;
+};
+
+export const getMovieDetail = async (movieId: string) : Promise<Movie> => {
+    const response = await api.get<Movie>(`/movie/${movieId}`);
 
     return response.data;
 };
