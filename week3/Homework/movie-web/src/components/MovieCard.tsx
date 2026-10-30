@@ -1,5 +1,6 @@
 import type { Movie } from '../types/movie';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 interface MovieCardProps {
         movie : Movie;
@@ -86,28 +87,30 @@ function MovieCard({ movie }:MovieCardProps) {
     `https://image.tmdb.org/t/p/w500${movie.poster_path}`: null;
 
     return (
-        <Card>
-            <div className="poster">
-                {imageUrl ? (
-                <img src={imageUrl} alt={`${movie.title} 포스터야미`} />
-            ) : (
-                <div className='no-poster'>포스터 없음</div>
-            )}
-                <span className='score'>★{movie.vote_average.toFixed(1)}</span>
-            </div>
+        <Link to={`/movie/${movie.id}`}>
 
-            
-            
-            <div className='movie-info'>
-                <h2>{movie.title}</h2>
+            <Card>
+                <div className="poster">
+                    {imageUrl ? (
+                    <img src={imageUrl} alt={`${movie.title} 포스터야미`} />
+                ) : (
+                    <div className='no-poster'>포스터 없음</div>
+                )}
+                    <span className='score'>★{movie.vote_average.toFixed(1)}</span>
+                </div>
 
-                <p className='release-data'>{movie.release_date}</p>
+                
+                
+                <div className='movie-info'>
+                    <h2>{movie.title}</h2>
 
-                <p className='overview'>{movie.overview}</p>
-            </div>
+                    <p className='release-data'>{movie.release_date}</p>
 
-            </Card>
-        
+                    <p className='overview'>{movie.overview}</p>
+                </div>
+
+                </Card>
+            </Link>
     );
 }
 
