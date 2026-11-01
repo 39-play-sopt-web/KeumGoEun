@@ -20,7 +20,7 @@ function useTimer() {
     // 타이머 종료 함수
     function stopTimer() {
         if (startTimeRef.current === null) {
-            return;
+            return 0;
         }
 
         const finalTime =
@@ -43,7 +43,7 @@ function useTimer() {
     // 시간이 흐르는 동안 업데이트
     useEffect(() => {
         if (!isRunning) {
-            return;
+            return ;
         }
 
         const timerId = setInterval(() => {

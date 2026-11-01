@@ -1,3 +1,9 @@
+import { TABS } from "../constant/tab";
+const TAB_ITEMS = [
+    { value: TABS.GAME, label: "게임" },
+    { value: TABS.RANKING, label: "랭킹" },
+];
+
 //헤더
 function Header({ elapsedTime, currentTab, onTabChange, level, onLevelChange }) {
     return (
@@ -5,16 +11,22 @@ function Header({ elapsedTime, currentTab, onTabChange, level, onLevelChange }) 
             <h1>숫자 클릭 게임</h1>
 
             <nav className="flex justify-center gap-2">
-                <button type="button" onClick={() => onTabChange("game")} className={`px-4 py-2 rounded-lg cursor-pointer ${
-                        currentTab === "game" ? "bg-yellow-100 font-bold" : "hover:bg-zinc-100"
-                    }`}>게임</button>
-                <button type="button" onClick={() => onTabChange("ranking")} className={`px-4 py-2 rounded-lg cursor-pointer ${
-                        currentTab === "ranking" ? "bg-yellow-100 font-bold" : "hover:bg-zinc-100"
-                    }`}>랭킹</button>
+                {TAB_ITEMS.map((tab) => (
+                    <button
+                        key={tab.value}
+                        type="button"
+                        onClick={() => onTabChange(tab.value)}
+                        className={`px-4 py-2 rounded-lg cursor-pointer ${
+                            currentTab === tab.value ? "bg-accent font-bold" : "hover:bg-zinc-100"
+                        }`}
+                    >
+                        {tab.label}
+                    </button>
+                ))}
             </nav>
             
             <div className="flex items-center justify-end gap-3">
-                {currentTab === "game" && (
+                {currentTab === TABS.GAME && (
                     <>
                 
             <select value={level} onChange={(event) => onLevelChange(event.target.value)} className="border border-zinc-200 rounded-lg px-3 py-2">

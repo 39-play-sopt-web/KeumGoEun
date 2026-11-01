@@ -1,26 +1,26 @@
 import { useState } from "react";
+import { getGameRecords, clearGameRecords } from "../utils/storage";
 
 // 랭킹
 function RankingBoard() {
 
     // 저장된 기록 가져오기
     function loadRecords() {
-        const savedRecords = localStorage.getItem("gameRecords");
-
-        const records = savedRecords
-            ? JSON.parse(savedRecords)
-            : [];
-
-        // 플레이 시간 오름차순
-        return records.sort((a, b) => a.playTime - b.playTime);
-    }
+        const records = getGameRecords();
+        return records.sort((a, b) => {
+            if (a.level !== b.level) {
+                return b.level - a.level; // 레벨 내림차순 정렬
+            }
+            return a.playTime - b.playTime; // 플레이 시간 오름차순 정렬
+        });
+}
 
     // 랭킹 기록 상태
     const [records, setRecords] = useState(loadRecords);
 
     // 랭킹 초기화
     function reset() {
-        localStorage.removeItem("gameRecords");
+        clearGameRecords();
         setRecords([]);
     }
 
@@ -39,7 +39,7 @@ function RankingBoard() {
             ) : (
                 <div className="overflow-hidden rounded-xl bg-white shadow-sm">
                 <table className="w-full text-center table-fixed">
-                    <thead className="bg-yellow-100">
+                    <thead className="bg-accent">
                         <tr>
                             <th className="p-3">순위</th>
                             <th className="p-3">레벨</th>
@@ -50,11 +50,11 @@ function RankingBoard() {
 
                     <tbody>
                         {records.map((record, index) => (
-                            <tr key={index} className="border-b border-zinc-100 last:border-0">
+                            <tr key={record.id} className="border-b border-zinc-100 last:border-0">
                                 <td className="py-3">{index + 1}</td>
                                 <td className="py-3">Level {record.level}</td>
                                 <td className="py-3">{record.playTime.toFixed(2)}초</td>
-                                <td className="py-3">{new Date(record.date).toLocaleString()}</td>
+                                <td className="py-3">{new Date(record.date).toLocaleString('ko-KR')}</td>
                             </tr>
                         ))}
                     </tbody>
