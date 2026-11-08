@@ -1,13 +1,5 @@
 import { apiClient } from './client';
-
-type AuthorizationCodeResponse = {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  data: {
-    authorizationCode: string;
-  };
-};
+import type { AuthorizationCodeResponse } from '../types/auth';
 
 export async function getAuthorizationCode(part: string) {
   const response = await apiClient.post<AuthorizationCodeResponse>(

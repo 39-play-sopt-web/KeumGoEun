@@ -50,12 +50,6 @@ function AuthPage() {
         {authMutation.isPending ? "발급 중..." : "코드 발급"}
       </button>
 
-      {authMutation.isSuccess && <p>회원 코드가 발급되었습니다.</p>}
-
-      {authMutation.isError && (
-        <p role="alert">회원 코드 발급에 실패했습니다.</p>
-      )}
-
       <button type="button" onClick={handleGoTOBoard}>
         게시판 목록 보기
       </button>
