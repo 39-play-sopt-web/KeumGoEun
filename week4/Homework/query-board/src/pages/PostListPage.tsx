@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { usePosts } from "../hooks/usePosts";
+import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import PostCard from "../components/PostCard";
 
 function PostListPage() {
@@ -11,6 +12,15 @@ function PostListPage() {
 
   //게시물 목록 가져오기
   const postsQuery = usePosts(searchKeyword);
+
+  const posts = postsQuery.data?.pages.flatMap((page) => page.posts) ?? [];
+
+  const loadMoreRef = useInfiniteScroll({
+    hasNextPage: postsQuery.hasNextPage,
+    isFetching: postsQuery.isFetching,
+    isFetchNextPageError: postsQuery.isFetchNextPageError,
+    fetchNextPage: postsQuery.fetchNextPage,
+  });
 
   function handleSearch() {
     const trimmedKeyword = keyword.trim();
@@ -53,18 +63,22 @@ function PostListPage() {
 
       {postsQuery.isError && <p>게시글을 불러오지 못했습니다.</p>}
 
-      {postsQuery.isSuccess &&
-        (postsQuery.data.posts.length === 0 ? (
+      {postsQuery.data &&
+        (posts.length === 0 ? (
           <p>조회된 게시글이 없습니다.</p>
         ) : (
           <ul>
-            {postsQuery.data.posts.map((post) => (
+            {posts.map((post) => (
               <li key={post.id}>
                 <PostCard post={post} />
               </li>
             ))}
           </ul>
         ))}
+
+      <div ref={loadMoreRef} style={{ height: 1 }} />
+
+      {postsQuery.isFetchingNextPage && <p>게시글을 더 불러오는 중...</p>}
     </main>
   );
 }
