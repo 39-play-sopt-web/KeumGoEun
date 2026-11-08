@@ -3,7 +3,7 @@ import { getPosts } from "../api/post";
 
 export function usePosts(keyword: string='') {
     return useInfiniteQuery({
-        queryKey: ['posts', keyword],
+        queryKey: ['posts', "infinite",keyword ],
         queryFn: ({pageParam}) => getPosts(keyword,pageParam),
 
         initialPageParam: undefined as number | undefined,

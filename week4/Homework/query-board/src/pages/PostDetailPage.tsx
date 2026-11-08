@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { usePostDetail } from "../hooks/usePostDetail";
 import { useDelete } from "../hooks/useDelete";
+import styled from "styled-components";
 
 function PostDetailPage() {
   const { postId } = useParams();
@@ -54,14 +55,14 @@ function PostDetailPage() {
   const post = postQuery.data;
 
   return (
-    <main>
-      <Link to="/posts">목록으로</Link>
+    <DetailContainer>
+      <BackLink to="/posts">← 목록으로</BackLink>
 
       <article>
         <h1>{post.title}</h1>
 
         <div>
-          <span>{post.author}</span>{" "}
+          <span>작성자: {post.author}</span>{" "}
           <time dateTime={post.createdAt}>
             {new Date(`${post.createdAt}Z`).toLocaleString("ko-KR", {
               timeZone: "Asia/Seoul",
@@ -72,16 +73,96 @@ function PostDetailPage() {
         <p>{post.content}</p>
       </article>
 
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={deletePostMutation.isPending}
-      >
-        {deletePostMutation.isPending ? "삭제 중..." : "삭제"}
-      </button>
-      <Link to={`/posts/${id}/edit`}>수정</Link>
-    </main>
+      <DetailActions>
+        <Link to={`/posts/${id}/edit`}>수정</Link>
+
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={deletePostMutation.isPending}
+        >
+          {deletePostMutation.isPending ? "삭제 중..." : "삭제"}
+        </button>
+      </DetailActions>
+    </DetailContainer>
   );
 }
 
 export default PostDetailPage;
+
+const DetailContainer = styled.main`
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 24px;
+
+  article {
+    margin: 24px 0;
+    padding: 24px;
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: 8px;
+    background-color: ${({ theme }) => theme.colors.surface};
+    overflow-wrap: anywhere;
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    font-size: 28px;
+  }
+
+  article div {
+    color: ${({ theme }) => theme.colors.textMuted};
+    font-size: 13px;
+  }
+
+  article p {
+    margin-top: 32px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+`;
+
+const DetailActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  a,
+  button {
+    padding: 10px 16px;
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: 6px;
+    background-color: ${({ theme }) => theme.colors.background};
+    font: inherit;
+    transition: background-color 0.2s;
+  }
+
+  a {
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  button {
+    color: ${({ theme }) => theme.colors.danger};
+  }
+
+  a:hover,
+  button:hover:not(:disabled) {
+    background-color: ${({ theme }) => theme.colors.surfaceHover};
+  }
+
+  button:disabled {
+    color: ${({ theme }) => theme.colors.disabledText};
+    background-color: ${({ theme }) => theme.colors.disabledBackground};
+  }
+`;
+
+const BackLink = styled(Link)`
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 6px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.surfaceHover};
+  }
+`;

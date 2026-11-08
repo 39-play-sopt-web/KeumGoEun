@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Post } from "../types/post";
 import { useNavigate } from "react-router-dom";
 import { useUpdate } from "../hooks/useUpdate";
+import styled from "styled-components";
 
 type PostEditProps = {
   post: Post;
@@ -62,26 +63,63 @@ function PostEdit({ post, onCancel }: PostEditProps) {
         maxLength={1000}
       />
       <p>{content.length} / 1000</p>
+      <ButtonGroup>
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={updatePostMutation.isPending}
+        >
+          취소
+        </button>
 
-      <button
-        type="button"
-        onClick={onCancel}
-        disabled={updatePostMutation.isPending}
-      >
-        취소
-      </button>
-
-      <button
-        type="button"
-        onClick={handleUpdate}
-        disabled={
-          !title.trim() || !content.trim() || updatePostMutation.isPending
-        }
-      >
-        {updatePostMutation.isPending ? "수정 중..." : "수정 완료"}
-      </button>
+        <SaveButton
+          type="button"
+          onClick={handleUpdate}
+          disabled={
+            !title.trim() || !content.trim() || updatePostMutation.isPending
+          }
+        >
+          {updatePostMutation.isPending ? "수정 중..." : "수정 완료"}
+        </SaveButton>
+      </ButtonGroup>
     </section>
   );
 }
 
 export default PostEdit;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  button {
+    padding: 10px 16px;
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: 6px;
+    transition: background-color 0.2s;
+  }
+
+  > button:first-child {
+    background-color: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  > button:first-child:hover:not(:disabled) {
+    background-color: ${({ theme }) => theme.colors.surfaceHover};
+  }
+
+  button:disabled {
+    background-color: ${({ theme }) => theme.colors.disabledBackground};
+    color: ${({ theme }) => theme.colors.disabledText};
+  }
+`;
+
+const SaveButton = styled.button`
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.onPrimary};
+
+  &:hover:not(:disabled) {
+    background-color: ${({ theme }) => theme.colors.primaryHover};
+  }
+`;

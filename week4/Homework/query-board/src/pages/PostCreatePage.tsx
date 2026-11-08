@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCreatePostMutation } from "../hooks/useCreatePost";
+import styled from "styled-components";
 
 function PostCreatePage() {
   const [title, setTitle] = useState("");
@@ -39,7 +40,7 @@ function PostCreatePage() {
   }
 
   return (
-    <main>
+    <CreateContainer>
       <h1>글쓰기</h1>
 
       {step === 1 && (
@@ -59,7 +60,7 @@ function PostCreatePage() {
             <p role="alert">제목은 50자 이하로 입력해 주세요.</p>
           )}
 
-          <div>
+          <ButtonGroup>
             <Link to="/posts">목록으로</Link>
 
             <button
@@ -69,7 +70,7 @@ function PostCreatePage() {
             >
               다음
             </button>
-          </div>
+          </ButtonGroup>
         </section>
       )}
 
@@ -90,7 +91,7 @@ function PostCreatePage() {
             <p role="alert">본문은 1000자 이하로 입력해 주세요.</p>
           )}
 
-          <div>
+          <ButtonGroup>
             <Link to="/posts">목록으로</Link>
 
             <button type="button" onClick={() => setStep(1)}>
@@ -104,7 +105,7 @@ function PostCreatePage() {
             >
               다음
             </button>
-          </div>
+          </ButtonGroup>
         </section>
       )}
 
@@ -125,7 +126,7 @@ function PostCreatePage() {
             <p role="alert">작성자는 20자 이하로 입력해 주세요.</p>
           )}
 
-          <div>
+          <ButtonGroup>
             <Link to="/posts">목록으로</Link>
 
             <button type="button" onClick={() => setStep(2)}>
@@ -143,11 +144,87 @@ function PostCreatePage() {
             >
               {createPostMutation.isPending ? "등록 중..." : "작성"}
             </button>
-          </div>
+          </ButtonGroup>
         </section>
       )}
-    </main>
+    </CreateContainer>
   );
 }
 
 export default PostCreatePage;
+
+const CreateContainer = styled.main`
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 24px;
+
+  h1 {
+    margin: 0 0 24px;
+    font-size: 28px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: 6px;
+    background-color: ${({ theme }) => theme.colors.surface};
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  textarea {
+    min-height: 200px;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: 2px solid ${({ theme }) => theme.colors.focus};
+    outline-offset: 1px;
+  }
+
+    p {
+    margin: 8px 0;
+    text-align: right;
+    font-size: 13px;
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+
+  p[role="alert"] {
+    text-align: left;
+    color: ${({ theme }) => theme.colors.danger};
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+
+  a,
+  button {
+    padding: 10px 16px;
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: 6px;
+    background-color: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
+    font: inherit;
+    transition: background-color 0.2s;
+  }
+
+  a:hover,
+  button:hover:not(:disabled) {
+    background-color: ${({ theme }) => theme.colors.surfaceHover};
+  }
+
+  button:disabled {
+    background-color: ${({ theme }) => theme.colors.disabledBackground};
+    color: ${({ theme }) => theme.colors.disabledText};
+  }
+`;
