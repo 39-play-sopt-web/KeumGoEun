@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 const MovieGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 24px;
   width: 100%;
 `;
@@ -47,6 +47,20 @@ const RatingFilters = styled.div`
   }
 `;
 
+const RetryButton = styled.button`
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
 
 
 const ratingFilters = [
@@ -55,7 +69,7 @@ const ratingFilters = [
   { label: '8 ~ 9점', min: 8, max: 9 },
   { label: '7 ~ 8점', min: 7, max: 8 },
   { label: '6 ~ 7점', min: 6, max: 7 },
-  { label: '6점 미만', min: 0, max: 6 },
+  { label: '6점 이하', min: 0, max: 6 },
 ];
 
 function MovieList() {
@@ -66,6 +80,7 @@ function MovieList() {
   const [page, setPage] = useState(1);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const [totalPages, setTotalPages] = useState(1);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let ignore = false;
@@ -79,7 +94,7 @@ function MovieList() {
         const data = await getMovies(filter.min, filter.max,page);
 
         if (!ignore) {
-            setTotalPages(data.total_pages);
+            setTotalPages(Math.min(data.total_pages,500));
 
             if (page === 1){
                 setMovies(data.results);
@@ -97,7 +112,12 @@ function MovieList() {
         console.error(error);
 
         if (!ignore) {
-          setError('영화 정보를 불러오지 못했어요.');
+          setError(
+            page === 1
+            ? '영화 정보를 불러오지 못했어요.'
+            : '다음 페이지를 불러오지 못했어요.'
+
+          );
         }
       } finally {
         if (!ignore) {
@@ -111,7 +131,7 @@ function MovieList() {
     return () => {
       ignore = true;
     };
-  }, [selectedFilter,page]);
+  }, [selectedFilter,page, retryCount]);
 
   useEffect(() => {
   const target = loaderRef.current;
@@ -161,23 +181,27 @@ return (
       ))}
     </RatingFilters>
 
-    {error ? (
-      <p>{error}</p>
-    ) : (
-      <>
-        <MovieGrid>
+    
+    <MovieGrid>
           {movies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </MovieGrid>
-
-        {loading && <p>영화를 불러오는 중...</p>}
-
-        {!loading && page < totalPages && (
-          <div ref={loaderRef} />
-        )}
-      </>
+    
+    {error && (
+      <div>
+        <p>{error}</p>
+        <RetryButton onClick={() => setRetryCount(prev => +1)}>
+          재시도
+        </RetryButton>
+      </div>
     )}
+
+    {loading && <p>영화를 불러오는 중...</p>}
+
+    {!loading && page < totalPages && (
+          <div ref={loaderRef} />)}
+
   </PageContainer>
 );
 

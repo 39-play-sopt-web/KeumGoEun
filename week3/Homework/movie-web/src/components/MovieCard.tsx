@@ -38,6 +38,7 @@ const Card = styled.div`
         -webkit-line-clamp:3;
         line-clamp:3;
         overflow:hidden;
+        font-size:14px;
     
     }
 
@@ -74,10 +75,6 @@ const Card = styled.div`
         margin:0;
         }
 
-    .overview{
-        font-size:14px;    
-    }
-    
     .poster-placeholder {
         width: 100%;
         aspect-ratio: 2 / 3;

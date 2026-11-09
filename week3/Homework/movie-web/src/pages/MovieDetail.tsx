@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { getMovieDetail } from '../api/movie';
-import type { MovieDetail as MovieDetailTYpe } from '../types/movie';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { getMovieDetail } from "../api/movie";
+import type { MovieDetail as MovieDetailTYpe } from "../types/movie";
+import styled from "styled-components";
 
 const DetailContainer = styled.div`
   max-width: 1100px;
@@ -56,23 +56,28 @@ const MovieHero = styled.div<{ $backdrop: string }>`
   overflow: hidden;
 
   background-image:
-  linear-gradient(
-    to top,
-    rgba(26, 27, 36, 1) 0%,
-    rgba(26, 27, 36, 0.73) 60%,
-    rgba(26, 27, 36, 1) 100%
-  ),
-  url(${({ $backdrop }) => $backdrop});
+    linear-gradient(
+      to top,
+      rgba(26, 27, 36, 1) 0%,
+      rgba(26, 27, 36, 0.73) 60%,
+      rgba(26, 27, 36, 1) 100%
+    ),
+    url(${({ $backdrop }) => $backdrop});
 
   background-size: cover;
   background-position: center;
 
-  img {
+  img,
+  .backdrop-placeholder {
     width: 200px;
     aspect-ratio: 2 / 3;
     object-fit: cover;
     border-radius: 12px;
     flex-shrink: 0;
+  }
+
+  .backdrop-placeholder {
+    background-color: #333333;
   }
 `;
 
@@ -121,20 +126,17 @@ const GenreTag = styled.span`
   font-size: 12px;
 `;
 
-
-
-
 function MovieDetail() {
   const { movieId } = useParams();
 
   const [movie, setMovie] = useState<MovieDetailTYpe | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!movieId) {
       setLoading(false);
-      setError('영화 ID가 없습니다.');
+      setError("영화 ID가 없습니다.");
       return;
     }
 
@@ -142,7 +144,7 @@ function MovieDetail() {
 
     const fetchMovie = async () => {
       setLoading(true);
-      setError('');
+      setError("");
       setMovie(null);
 
       try {
@@ -155,7 +157,7 @@ function MovieDetail() {
         console.error(error);
 
         if (!ignore) {
-          setError('영화 정보를 불러오지 못했어요.');
+          setError("영화 정보를 불러오지 못했어요.");
         }
       } finally {
         if (!ignore) {
@@ -188,93 +190,85 @@ function MovieDetail() {
     return <p>영화 정보가 없습니다.</p>;
   }
 
+  const movieInfo = [
+    { label: "원제", value: movie.original_title },
+    { label: "언어", value: movie.original_language },
+    {
+      label: "제작 국가",
+      value: movie.production_countries
+        .map((country) => country.name)
+        .join(", "),
+    },
+    {
+      label: "상영 언어",
+      value: movie.spoken_languages
+        .map((language) => language.english_name)
+        .join(", "),
+    },
+    {
+      label: "예산",
+      value:
+        movie.budget > 0 ? `$${movie.budget.toLocaleString()}` : "정보 없음",
+    },
+    {
+      label: "수익",
+      value:
+        movie.revenue > 0 ? `$${movie.revenue.toLocaleString()}` : "정보 없음",
+    },
+  ];
+
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-    : '';
+    : "";
 
   return (
     <DetailContainer>
       <Link to="/">← 목록으로 돌아가기</Link>
 
-    
-    <MovieHero $backdrop={backdropUrl}>
-        <img src={
-          movie.poster_path
-            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-            : '/no-image.png'
-        }
-        alt={movie.title}
-      />
+      <MovieHero $backdrop={backdropUrl}>
+        {movie.poster_path ? (
+          <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title}
+          />
+        ) : (
+          <div className="backdrop-placeholder" />
+        )}
 
-      <MovieInfo>
-        <h1>{movie.title}</h1>
+        <MovieInfo>
+          <h1>{movie.title}</h1>
 
-        <DetailScore>
-            ★ {movie.vote_average.toFixed(1)}
-        </DetailScore>
+          <DetailScore>★ {movie.vote_average.toFixed(1)}</DetailScore>
 
-        <p>
-            개봉일: {movie.release_date} ·
-            상영 시간: {movie.runtime ?? '정보 없음'}분 ·
-            평가 {movie.vote_count.toLocaleString()}명
-        </p>
+          <p>
+            개봉일: {movie.release_date} · 상영 시간:{" "}
+            {movie.runtime ? `${movie.runtime}분`: "정보 없음"} · 평가{" "}
+            {movie.vote_count.toLocaleString()}명
+          </p>
 
-        <p>상태: {movie.status}</p>
+          <p>상태: {movie.status}</p>
 
-        <GenreList>
+          <GenreList>
             {movie.genres.map((genre) => (
-            <GenreTag key={genre.id}>
-                {genre.name}
-            </GenreTag>
+              <GenreTag key={genre.id}>{genre.name}</GenreTag>
             ))}
-        </GenreList>
-</MovieInfo>
-    </MovieHero>
+          </GenreList>
+        </MovieInfo>
+      </MovieHero>
 
       <h2>줄거리</h2>
-      <p>{movie.overview || '등록된 줄거리가 없습니다.'}</p>
+      <p>{movie.overview || "등록된 줄거리가 없습니다."}</p>
 
       <h2>기본 정보</h2>
 
-        <InfoGrid>
-        <InfoCard>
-            <span className="label">원제</span>
-            <span className="value">{movie.original_title}</span>
-        </InfoCard>
-
-        <InfoCard>
-            <span className="label">언어</span>
-            <span className="value">{movie.original_language}</span>
-        </InfoCard>
-
-        <InfoCard>
-            <span className="label">제작 국가</span>
-            <span className="value">
-            {movie.production_countries.map((country) => country.name).join(', ')}
-            </span>
-        </InfoCard>
-
-        <InfoCard>
-            <span className="label">상영 언어</span>
-            <span className="value">
-            {movie.spoken_languages.map((language) => language.english_name).join(', ')}
-            </span>
-        </InfoCard>
-
-        <InfoCard>
-            <span className="label">예산</span>
-            <span className="value">
-            {movie.budget > 0 ? `$${movie.budget.toLocaleString()}` : '정보 없음'}
-            </span>
-        </InfoCard>
-
-        <InfoCard>
-            <span className="label">수익</span>
-            <span className="value">
-            {movie.revenue > 0 ? `$${movie.revenue.toLocaleString()}` : '정보 없음'}
-            </span>
-        </InfoCard>
-        </InfoGrid>
+      <InfoGrid>
+        {movieInfo.map((info) => (
+          <InfoCard key={info.label}>
+            <span className="label">{info.label}</span>
+            <span className="value">{info.value}</span>
+          </InfoCard>
+        ))}
+      </InfoGrid>
     </DetailContainer>
   );
 }
